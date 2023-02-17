@@ -33,6 +33,15 @@
                     "initialStateCheck": false
                 },
                 {
+                    "name": "RMB",
+                    "type": "Button",
+                    "id": "261c20d1-5b78-486e-a748-ddb7d819785a",
+                    "expectedControlType": "Button",
+                    "processors": "",
+                    "interactions": "",
+                    "initialStateCheck": false
+                },
+                {
                     "name": "Interact",
                     "type": "Button",
                     "id": "1e938dd3-d92e-4929-9095-a73f7c31d2a7",
@@ -148,6 +157,17 @@
                     "processors": "",
                     "groups": "Keyboard and mouse",
                     "action": "Drop",
+                    "isComposite": false,
+                    "isPartOfComposite": false
+                },
+                {
+                    "name": "",
+                    "id": "8854e081-e9ce-443f-9aae-b193b82d01b8",
+                    "path": "<Mouse>/rightButton",
+                    "interactions": "",
+                    "processors": "",
+                    "groups": "Keyboard and mouse",
+                    "action": "RMB",
                     "isComposite": false,
                     "isPartOfComposite": false
                 }

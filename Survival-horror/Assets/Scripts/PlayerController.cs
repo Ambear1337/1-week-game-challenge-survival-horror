@@ -21,8 +21,10 @@ public class PlayerController : MonoBehaviour
 
     [SerializeField] float moveSpeed = 3f;
 
+    public PlayerInput playerInput;
+    public Camera cam;
+
     [SerializeField] InputHandler input;
-    [SerializeField] Camera cam;
 
     private void Awake()
     {
@@ -70,6 +72,7 @@ public class PlayerController : MonoBehaviour
         transform.rotation = desiredPlayerRotation;
         cam.transform.localRotation = desiredCameraRotation;
     }
+
 
     public void UseItem(InputAction.CallbackContext ctx)
     {

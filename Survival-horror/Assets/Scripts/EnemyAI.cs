@@ -50,6 +50,12 @@ public class EnemyAI : MonoBehaviour
             agent.speed = chaseSpeed;
 
             agent.SetDestination(_player.position);
+            Vector3 lastPlayerPosition = _player.position;
+
+            if (!_playerInSight)
+            {
+                agent.SetDestination(lastPlayerPosition);
+            }
         }
         else
         {
@@ -84,6 +90,7 @@ public class EnemyAI : MonoBehaviour
     {
         if (Vector3.Distance(transform.position, _player.position) > viewDistance)
         {
+            _playerInSight = false;
             return false;
         }
 
@@ -92,6 +99,7 @@ public class EnemyAI : MonoBehaviour
 
         if (angle > fieldOfView / 2f)
         {
+            _playerInSight = false;
             return false;
         }
 
@@ -105,15 +113,18 @@ public class EnemyAI : MonoBehaviour
                 // Check if the player is in the light
                 if (hit.collider.GetComponent<PlayerController>().IsInLight())
                 {
+                    _playerInSight = true;
                     return true;
                 }
                 else
                 {
+                    _playerInSight = false;
                     return false;
                 }
             }
         }
 
+        _playerInSight = false;
         return false;
     }
 
@@ -125,8 +136,14 @@ public class EnemyAI : MonoBehaviour
     public void Attack()
     {
         attacking = true;
-        _player.GetComponent<PlayerStats>().GetDamage(damage);
+
+        //_player.GetComponent<PlayerStats>().GetDamage(damage);
         StartCoroutine(AttackCooldown());
+    }
+
+    IEnumerator LosePlayer()
+    {
+        yield return new WaitForSeconds(3f);
     }
 
     IEnumerator AttackCooldown()

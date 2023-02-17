@@ -2078,13 +2078,15 @@ GameObject:
   m_Component:
   - component: {fileID: 9093652822013453176}
   - component: {fileID: 2941705818672396546}
+  - component: {fileID: -7637059582736244931}
+  - component: {fileID: 35166308494136748}
+  - component: {fileID: 1065093038910112228}
   - component: {fileID: 3213735945239058943}
-  - component: {fileID: 3516177713802485459}
   - component: {fileID: 2758059428090132345}
   - component: {fileID: 2544736547923609924}
   m_Layer: 8
   m_Name: Cultist
-  m_TagString: Untagged
+  m_TagString: Enemy
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
   m_StaticEditorFlags: 0
@@ -2126,6 +2128,148 @@ Animator:
   m_HasTransformHierarchy: 1
   m_AllowConstantClipSamplingOptimization: 1
   m_KeepAnimatorStateOnDisable: 0
+--- !u!114 &-7637059582736244931
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 8464785580816300482}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 45a4ff32b81637044bbafe500bb683cc, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  enemySounds:
+  - {fileID: 8300000, guid: 2e429d5c1b5ffbe4e839bdde9744f381, type: 3}
+--- !u!82 &35166308494136748
+AudioSource:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 8464785580816300482}
+  m_Enabled: 1
+  serializedVersion: 4
+  OutputAudioMixerGroup: {fileID: 0}
+  m_audioClip: {fileID: 8300000, guid: 2e429d5c1b5ffbe4e839bdde9744f381, type: 3}
+  m_PlayOnAwake: 0
+  m_Volume: 1
+  m_Pitch: 1.51
+  Loop: 0
+  Mute: 0
+  Spatialize: 0
+  SpatializePostEffects: 0
+  Priority: 128
+  DopplerLevel: 1
+  MinDistance: 1
+  MaxDistance: 500
+  Pan2D: 0
+  rolloffMode: 0
+  BypassEffects: 0
+  BypassListenerEffects: 0
+  BypassReverbZones: 0
+  rolloffCustomCurve:
+    serializedVersion: 2
+    m_Curve:
+    - serializedVersion: 3
+      time: 0
+      value: 1
+      inSlope: 0
+      outSlope: 0
+      tangentMode: 0
+      weightedMode: 0
+      inWeight: 0.33333334
+      outWeight: 0.33333334
+    - serializedVersion: 3
+      time: 1
+      value: 0
+      inSlope: 0
+      outSlope: 0
+      tangentMode: 0
+      weightedMode: 0
+      inWeight: 0.33333334
+      outWeight: 0.33333334
+    m_PreInfinity: 2
+    m_PostInfinity: 2
+    m_RotationOrder: 4
+  panLevelCustomCurve:
+    serializedVersion: 2
+    m_Curve:
+    - serializedVersion: 3
+      time: 0
+      value: 0
+      inSlope: 0
+      outSlope: 0
+      tangentMode: 0
+      weightedMode: 0
+      inWeight: 0.33333334
+      outWeight: 0.33333334
+    m_PreInfinity: 2
+    m_PostInfinity: 2
+    m_RotationOrder: 4
+  spreadCustomCurve:
+    serializedVersion: 2
+    m_Curve:
+    - serializedVersion: 3
+      time: 0
+      value: 0
+      inSlope: 0
+      outSlope: 0
+      tangentMode: 0
+      weightedMode: 0
+      inWeight: 0.33333334
+      outWeight: 0.33333334
+    m_PreInfinity: 2
+    m_PostInfinity: 2
+    m_RotationOrder: 4
+  reverbZoneMixCustomCurve:
+    serializedVersion: 2
+    m_Curve:
+    - serializedVersion: 3
+      time: 0
+      value: 1
+      inSlope: 0
+      outSlope: 0
+      tangentMode: 0
+      weightedMode: 0
+      inWeight: 0.33333334
+      outWeight: 0.33333334
+    m_PreInfinity: 2
+    m_PostInfinity: 2
+    m_RotationOrder: 4
+--- !u!114 &1065093038910112228
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 8464785580816300482}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 931d67824eb02ce43802c91f482cc8e3, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  animator: {fileID: 2941705818672396546}
+  patrolSpeed: 2
+  chaseSpeed: 3
+  fieldOfView: 120
+  viewDistance: 10
+  attackDistance: 2
+  damage: 20
+  enemyFace: {fileID: 7776194006155795576}
+  _player: {fileID: 0}
+  playerStats: {fileID: 0}
+  _playerInSight: 0
+  attacking: 0
+  patrolPoints:
+  - {fileID: 0}
+  - {fileID: 0}
+  - {fileID: 0}
+  _currentPatrolPoint: 0
+  playerLastPosition: {x: 0, y: 0, z: 0}
+  agent: {fileID: 2758059428090132345}
+  audioManager: {fileID: -7637059582736244931}
 --- !u!114 &3213735945239058943
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -2138,29 +2282,8 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 1dcff1e93d6b16e449954326650058de, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
---- !u!114 &3516177713802485459
-MonoBehaviour:
-  m_ObjectHideFlags: 0
-  m_CorrespondingSourceObject: {fileID: 0}
-  m_PrefabInstance: {fileID: 0}
-  m_PrefabAsset: {fileID: 0}
-  m_GameObject: {fileID: 8464785580816300482}
-  m_Enabled: 1
-  m_EditorHideFlags: 0
-  m_Script: {fileID: 11500000, guid: aaa1f474f27353d4984f7e218fde9b5c, type: 3}
-  m_Name: 
-  m_EditorClassIdentifier: 
-  animator: {fileID: 2941705818672396546}
-  patrolSpeed: 2
-  chaseSpeed: 3
-  fieldOfView: 120
-  viewDistance: 10
-  attackDistance: 2
-  damage: 20
-  patrolPoints:
-  - {fileID: 0}
-  - {fileID: 0}
-  - {fileID: 0}
+  health: 100
+  maxHealth: 100
 --- !u!195 &2758059428090132345
 NavMeshAgent:
   m_ObjectHideFlags: 0
@@ -2175,7 +2298,7 @@ NavMeshAgent:
   m_Acceleration: 8
   avoidancePriority: 50
   m_AngularSpeed: 120
-  m_StoppingDistance: 2
+  m_StoppingDistance: 1.5
   m_AutoTraverseOffMeshLink: 1
   m_AutoBraking: 1
   m_AutoRepath: 1
