@@ -1,18 +1,27 @@
-using System.Collections;
-using System.Collections.Generic;
 using UnityEngine;
 
-public abstract class Interactable : MonoBehaviour
+namespace Interactable
 {
-    public enum InteractionType
+    public abstract class Interactable : MonoBehaviour
     {
-        Click,
-        Hold
+        public enum InteractionType
+        {
+            Click,
+            Hold
+        }
+
+        public enum ItemType
+        {
+            Null,
+            Lockpick
+        }
+
+        public ItemType itemType;
+
+        public InteractionType interactionType;
+
+        public abstract string GetDescription();
+
+        public abstract void Interact(PlayerManager player);
     }
-
-    public InteractionType interactionType;
-
-    public abstract string GetDescription();
-
-    public abstract void Interact(PlayerStats player);
 }

@@ -2,27 +2,35 @@ using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
 using UnityEngine.InputSystem;
+using UnityEngine.UI;
+using UnityEngine.SceneManagement;
 
 public class PlayerStats : MonoBehaviour
 {
-    [Header("Health")]
+    private PlayerManager playerManager;
+
+    [Header("Health")] private Color healthBarDefaultColor;
     [SerializeField] private int health = 100;
     [SerializeField] private int maxHealth = 100;
+
+    [SerializeField] private Image healthBar;
 
     [SerializeField] private float screamerFOV = 30f;
     [SerializeField] private float normalFOV = 60f;
 
     [SerializeField] Transform equippedItemTransform;
     [SerializeField] GameObject equippedItemGO;
-    [SerializeField] Camera cam;
 
     public EquippedItem equippedItem;
 
-    private PlayerController controller;
+    private void Awake()
+    {
+        playerManager = GetComponent<PlayerManager>();
+    }
 
     private void Start()
     {
-        controller = GetComponent<PlayerController>();
+        healthBarDefaultColor = healthBar.color;
     }
 
     public void GetDamage(int damage, Transform enemy)
@@ -35,38 +43,67 @@ public class PlayerStats : MonoBehaviour
             Death();
         }
 
-        controller.playerInput.enabled = false;
-        controller.enabled = false;
-        controller.cam.fieldOfView = screamerFOV;
+        UpdateHealthBar();
+
+        playerManager.PlayerInput.enabled = false;
+        playerManager.PlayerController.enabled = false;
+        playerManager.PlayerController.cam.fieldOfView = screamerFOV;
 
         StartCoroutine(ScreamerCoroutine(enemy));
     }
 
     public void ReleasePlayer()
     {
-        controller.enabled = true;
-        controller.playerInput.enabled = true;
-        controller.cam.fieldOfView = normalFOV;
+        playerManager.PlayerInput.enabled = true;
+        playerManager.PlayerController.enabled = true;
+        playerManager.PlayerController.cam.fieldOfView = normalFOV;
+
+        StartCoroutine(RegenerateHealth());
     }
 
-    private void Death()
+    private static void Death()
     {
-
+        SceneManager.LoadScene(SceneManager.GetActiveScene().name);
     }
 
     IEnumerator ScreamerCoroutine(Transform enemyFace)
     {
-        while (controller.playerInput.enabled == false)
+        while (playerManager.PlayerInput.enabled == false)
         {
-            controller.cam.transform.LookAt(enemyFace);
+            playerManager.PlayerController.cam.transform.LookAt(enemyFace);
 
             yield return null;
         }
     }
 
+    private IEnumerator RegenerateHealth()
+    {
+        while (health < maxHealth)
+        {
+            yield return new WaitForSeconds(1f);
+
+            health += 5;
+
+            if (health > maxHealth)
+            {
+                health = maxHealth;
+            }
+
+            UpdateHealthBar();
+        }
+    }
+
+    private void UpdateHealthBar()
+    {
+        var healthBarNewColor = new Color(healthBarDefaultColor.r, healthBarDefaultColor.g, healthBarDefaultColor.b,
+            (maxHealth * 0.01f - health * 0.01f) / 2);
+        healthBar.color = healthBarNewColor;
+    }
+
     public void Equip(GameObject equipItem)
     {
-        equippedItemGO = Instantiate(equipItem, equippedItemTransform.position, equippedItemTransform.rotation, cam.transform);
+        equippedItemGO = Instantiate(equipItem, equippedItemTransform.position, equippedItemTransform.rotation,
+            playerManager.PlayerController.cam.transform);
         equippedItem = equippedItemGO.GetComponent<EquippedItem>();
     }
 }

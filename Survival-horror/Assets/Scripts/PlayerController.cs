@@ -6,30 +6,38 @@ using UnityEngine.InputSystem;
 [RequireComponent(typeof(CharacterController))]
 public class PlayerController : MonoBehaviour
 {
-    CharacterController controller;
-    PlayerStats stats;
+    private PlayerManager playerManager;
 
-    private bool isInLight = true;
+    private CharacterController controller;
 
-    Vector3 currentCameraVelocity;
+    private bool isCrouching = false;
+    private bool canUncrouch = true;
 
     private float rotY;
     private float rotX;
 
+    public bool isInLight = false;
+    public float noiseValue;
+
+    public Camera cam;
+
     [SerializeField] private float smoothTime = 1f;
     [SerializeField] private float mouseSensitivity = 1f;
 
-    [SerializeField] float moveSpeed = 3f;
+    [SerializeField] private float crouchSpeed = 1f;
+    [SerializeField] private float walkSpeed = 3f;
+    [SerializeField] private float runSpeed = 5f;
+    [SerializeField] private float moveSpeed = 3f;
 
-    public PlayerInput playerInput;
-    public Camera cam;
+    [SerializeField] private Vector3 crouchScale = new Vector3(1f, 0.5f, 1f);
+    [SerializeField] private Vector3 normalScale = Vector3.one;
 
     [SerializeField] InputHandler input;
 
     private void Awake()
     {
+        playerManager = GetComponent<PlayerManager>();
         controller = GetComponent<CharacterController>();
-        stats = GetComponent<PlayerStats>();
 
         Cursor.lockState = CursorLockMode.Locked;
         Cursor.visible = false;
@@ -47,27 +55,30 @@ public class PlayerController : MonoBehaviour
 
     private void Movement()
     {
-        Vector3 moveDirection = Quaternion.Euler(0, cam.transform.eulerAngles.y ,0) * new Vector3(input.inputDirection.x, 0, input.inputDirection.y).normalized;
-        Vector3 velocity = moveDirection * moveSpeed * Time.deltaTime;
+        var moveDirection = Quaternion.Euler(0, cam.transform.eulerAngles.y, 0) *
+                            new Vector3(input.inputDirection.x, 0, input.inputDirection.y).normalized;
+        var velocity = moveDirection * (moveSpeed * Time.deltaTime);
 
         if (!controller.isGrounded)
         {
-            velocity = velocity + (Physics.gravity * Time.deltaTime);
+            velocity += (Physics.gravity * Time.deltaTime);
         }
 
         controller.Move(velocity);
     }
 
     //arttymen
-    public void Rotation()
+    private void Rotation()
     {
         rotY += input.mouseInput.x * mouseSensitivity * Time.deltaTime;
         rotX -= input.mouseInput.y * mouseSensitivity * Time.deltaTime;
 
         rotX = Mathf.Clamp(rotX, -80f, 80f);
 
-        Quaternion desiredPlayerRotation = Quaternion.Slerp(transform.rotation, Quaternion.Euler(0f, rotY, 0f), smoothTime);
-        Quaternion desiredCameraRotation = Quaternion.Slerp(cam.transform.localRotation, Quaternion.Euler(rotX, 0f, 0f), smoothTime);
+        var desiredPlayerRotation =
+            Quaternion.Slerp(transform.rotation, Quaternion.Euler(0f, rotY, 0f), smoothTime);
+        var desiredCameraRotation =
+            Quaternion.Slerp(cam.transform.localRotation, Quaternion.Euler(rotX, 0f, 0f), smoothTime);
 
         transform.rotation = desiredPlayerRotation;
         cam.transform.localRotation = desiredCameraRotation;
@@ -76,22 +87,54 @@ public class PlayerController : MonoBehaviour
 
     public void UseItem(InputAction.CallbackContext ctx)
     {
-        if (ctx.performed && stats.equippedItem != null)
+        if (ctx.performed && playerManager.PlayerStats.equippedItem != null)
         {
-            stats.equippedItem.Use();
+            playerManager.PlayerStats.equippedItem.Use();
         }
     }
 
     public void DropItem(InputAction.CallbackContext ctx)
     {
-        if (ctx.performed && stats.equippedItem != null)
+        if (ctx.performed && playerManager.PlayerStats.equippedItem != null)
         {
-            stats.equippedItem.Drop();
+            playerManager.PlayerStats.equippedItem.Drop();
         }
     }
 
-    public bool IsInLight()
+    public void Crouch(InputAction.CallbackContext ctx)
     {
-        return isInLight;
+        switch (ctx.performed)
+        {
+            case true when isCrouching == false:
+                isCrouching = true;
+                moveSpeed = crouchSpeed;
+                noiseValue = 0.3f;
+
+                transform.localScale = crouchScale;
+                break;
+            case true when isCrouching == true && canUncrouch:
+                isCrouching = false;
+                moveSpeed = walkSpeed;
+                noiseValue = 0.6f;
+
+                transform.localScale = normalScale;
+                break;
+        }
+    }
+
+    private void OnTriggerEnter(Collider other)
+    {
+        if (other.gameObject.CompareTag("HidingSpot"))
+        {
+            canUncrouch = false;
+        }
+    }
+
+    private void OnTriggerExit(Collider other)
+    {
+        if (other.gameObject.CompareTag("HidingSpot"))
+        {
+            canUncrouch = true;
+        }
     }
 }

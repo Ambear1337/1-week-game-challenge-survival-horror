@@ -1,22 +1,21 @@
-using System.Collections;
-using System.Collections.Generic;
-using UnityEngine;
-
-public class EnemyIdleState : EnemyBaseState
+namespace Enemy
 {
-    EnemyStateManager manager;
-
-    public override void EnterState(EnemyStateManager _stateManager)
+    public class EnemyIdleState : EnemyBaseState
     {
-        manager = _stateManager;
+        EnemyStateManager manager;
 
-        manager.agent.isStopped = true;
+        public override void EnterState(EnemyStateManager stateManager)
+        {
+            manager = stateManager;
 
-        manager.animator.SetTrigger("PlayerLost");
-    }
+            manager.agent.isStopped = true;
 
-    public override void UpdateState()
-    {
+            manager.animator.SetTrigger("PlayerLost");
+        }
+
+        public override void UpdateState()
+        {
         
+        }
     }
 }

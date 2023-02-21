@@ -16,7 +16,7 @@ public class RifleEquipped : EquippedItem
 
     private void Update()
     {
-        Ray ray = new Ray(transform.parent.position, transform.parent.forward);
+        var ray = new Ray(transform.parent.position, transform.parent.forward);
         RaycastHit hit;
 
         Debug.DrawRay(ray.origin, ray.direction, Color.red, 1f);
@@ -34,7 +34,7 @@ public class RifleEquipped : EquippedItem
             Debug.Log("Bullet should be spawned!");
             
             canShoot = false;
-            GameObject bullet = Instantiate(bulletPrefab, weaponEnd.position, Quaternion.identity, null);
+            var bullet = Instantiate(bulletPrefab, weaponEnd.position, Quaternion.identity, null);
             bullet.GetComponent<Bullet>().AddForce(weaponEnd.position - transform.position);
             StartCoroutine(ReloadCoroutine());
         }

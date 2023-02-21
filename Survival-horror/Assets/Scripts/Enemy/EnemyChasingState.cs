@@ -1,49 +1,61 @@
-using System.Collections;
-using System.Collections.Generic;
 using UnityEngine;
+using UnityEngine.AI;
 
-public class EnemyChasingState : EnemyBaseState
+namespace Enemy
 {
-    EnemyStateManager manager;
-
-    public override void EnterState(EnemyStateManager _stateManager)
+    public class EnemyChasingState : EnemyBaseState
     {
-        manager = _stateManager;
+        EnemyStateManager manager;
 
-        manager.agent.isStopped = false;
-
-        manager.animator.SetBool("IsChasing", true);
-        manager.agent.speed = manager.chaseSpeed;
-    }
-
-    public override void UpdateState()
-    {
-        if (manager._playerInSight)
+        public override void EnterState(EnemyStateManager stateManager)
         {
-            manager.playerLastPosition = manager._player.position;
-            
-            if (Vector3.Distance(manager.transform.position, manager._player.position) > manager.attackDistance)
-            {
-                manager.agent.SetDestination(manager._player.position);
-            }
-            else
-            {
-                manager.animator.SetBool("IsChasing", false);
-                manager.SwitchState(manager.attackingState);
-            }
+            manager = stateManager;
+
+            manager.agent.isStopped = false;
+
+            manager.animator.SetBool("IsChasing", true);
+            manager.agent.speed = manager.chaseSpeed;
         }
-        else
-        {
-            if (Vector3.Distance(manager.transform.position, manager.playerLastPosition) <= 2.5f)
-            {
-                manager.agent.isStopped = true;
 
-                manager.animator.SetBool("IsChasing", false);
-                manager.SwitchState(manager.idleState);
+        public override void UpdateState()
+        {
+            if (manager.playerInSight)
+            {
+                manager.playerLastPosition = manager.player.position;
+
+                if (Vector3.Distance(manager.transform.position, manager.player.position) > manager.attackDistance)
+                {
+                    manager.agent.SetDestination(manager.player.position);
+                }
+                else
+                {
+                    manager.animator.SetBool("IsChasing", false);
+                    manager.SwitchState(manager.attackingState);
+                }
             }
             else
             {
-                manager.agent.SetDestination(manager.playerLastPosition);
+                if (Vector3.Distance(manager.transform.position, manager.playerLastPosition) <= 2.5f)
+                {
+                    manager.agent.isStopped = true;
+
+                    manager.animator.SetBool("IsChasing", false);
+                    manager.SwitchState(manager.idleState);
+                }
+                else
+                {
+                    if (manager.CheckIfCanReachPlayer(manager.playerLastPosition))
+                    {
+                        manager.agent.SetDestination(manager.playerLastPosition);
+                    }
+                    else
+                    {
+                        manager.agent.isStopped = true;
+
+                        manager.animator.SetBool("IsChasing", false);
+                        manager.SwitchState(manager.idleState);
+                    }
+                }
             }
         }
     }

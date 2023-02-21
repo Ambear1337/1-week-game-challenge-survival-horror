@@ -1,67 +1,99 @@
-using System.Collections;
-using System.Collections.Generic;
 using UnityEngine;
 using UnityEngine.InputSystem;
+using UnityEngine.Serialization;
 
-public class PlayerInteraction : MonoBehaviour
+namespace Interactable
 {
-    public float interactionDistance = 3f;
-
-    public TMPro.TextMeshProUGUI interactionText;
-
-    [SerializeField] private Camera cam;
-
-    Interactable interactable;
-
-    // Update is called once per frame
-    void Update()
+    public class PlayerInteraction : MonoBehaviour
     {
-        Ray ray = new Ray(cam.transform.position, cam.transform.forward);
-        RaycastHit hit;
+        private PlayerManager playerManager;
 
-        bool successfulHit = false;
+        public float interactionDistance = 3f;
 
-        if (Physics.Raycast(ray, out hit, interactionDistance))
+        public TMPro.TextMeshProUGUI InteractionText;
+
+        [FormerlySerializedAs("ICantDoThisText")]
+        public TMPro.TextMeshProUGUI errorText;
+
+        [SerializeField] private Camera cam;
+
+        Interactable interactable;
+
+        private void Awake()
         {
-            if (!hit.collider.isTrigger)
-            {
-                interactable = hit.collider.GetComponent<Interactable>();
+            playerManager = GetComponent<PlayerManager>();
+        }
 
-                if (interactable != null)
+        // Update is called once per frame
+        void Update()
+        {
+            var ray = new Ray(cam.transform.position, cam.transform.forward);
+            RaycastHit hit;
+
+            var successfulHit = false;
+
+            if (Physics.Raycast(ray, out hit, interactionDistance))
+            {
+                if (!hit.collider.isTrigger)
                 {
-                    Debug.DrawRay(ray.origin, ray.direction, Color.green);
-                    interactionText.text = interactable.GetDescription();
-                    successfulHit = true;
+                    interactable = hit.collider.GetComponent<Interactable>();
+
+                    if (!interactable)
+                    {
+                        Debug.DrawRay(ray.origin, ray.direction, Color.green);
+                        InteractionText.text = interactable.GetDescription();
+                        successfulHit = true;
+                    }
                 }
             }
-        }
 
-        if (!successfulHit)
-        {
-            interactionText.text = "";
-            interactionText.color = Color.white;
-        }
-    }
-
-    public void TryToInteract(InputAction.CallbackContext ctx)
-    {
-        if (ctx.performed && interactable != null)
-        {
-            switch (interactable.interactionType)
+            if (!successfulHit)
             {
-                case Interactable.InteractionType.Click:
-                    interactable.Interact(GetComponent<PlayerStats>());
-                    break;
-                case Interactable.InteractionType.Hold:
-                    interactable.Interact(GetComponent<PlayerStats>());
-                    break;
-                default:
-                    throw new System.Exception("Unsupported type of interactable.");
+                InteractionText.text = "";
+                InteractionText.color = Color.white;
             }
         }
-        else
+
+        public void TryToInteract(InputAction.CallbackContext ctx)
         {
-            return;
+            if (ctx.performed && interactable != null)
+            {
+                switch (interactable.itemType)
+                {
+                    case Interactable.ItemType.Null:
+                        interactable.Interact(playerManager);
+                        break;
+                    case Interactable.ItemType.Lockpick:
+                        if (playerManager.PlayerStats.equippedItem != null &&
+                            playerManager.PlayerStats.equippedItem.gameObject.name.StartsWith("Lockpick"))
+                        {
+                            interactable.Interact(playerManager);
+                        }
+                        else
+                        {
+                            StartErrorTextAnimation("I can't do this");
+                            return;
+                        }
+
+                        break;
+                    default:
+                        throw new System.Exception("Unsupported type of interactable.");
+                }
+            }
+            else
+            {
+                return;
+            }
+        }
+
+        public void StartErrorTextAnimation(string errorString)
+        {
+            errorText.text = errorString;
+            
+            var animator = errorText.transform.GetComponent<Animator>();
+
+            animator.enabled = true;
+            animator.Play("Base Layer.ErrorTextAnim");
         }
     }
 }

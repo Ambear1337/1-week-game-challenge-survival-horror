@@ -1,10 +1,9 @@
-using System.Collections;
-using System.Collections.Generic;
-using UnityEngine;
-
-public abstract class EnemyBaseState
+namespace Enemy
 {
-    public abstract void EnterState(EnemyStateManager stateManager);
+    public abstract class EnemyBaseState
+    {
+        public abstract void EnterState(EnemyStateManager stateManager);
     
-    public abstract void UpdateState();
+        public abstract void UpdateState();
+    }
 }

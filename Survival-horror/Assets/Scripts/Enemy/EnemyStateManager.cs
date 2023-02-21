@@ -1,139 +1,189 @@
-using System.Collections;
-using System.Collections.Generic;
+using System;
 using UnityEngine;
 using UnityEngine.AI;
+using UnityEngine.Serialization;
 
-public class EnemyStateManager : MonoBehaviour
+namespace Enemy
 {
-    EnemyBaseState currentState;
-    public EnemyBaseState previousState;
-
-    public EnemyIdleState idleState = new EnemyIdleState();
-    public EnemyAttackingState attackingState = new EnemyAttackingState();
-    public EnemyPatrolingState patrolingState = new EnemyPatrolingState();
-    public EnemyChasingState chasingState = new EnemyChasingState();
-
-    public Animator animator;
-
-    public float patrolSpeed = 5f;
-    public float chaseSpeed = 10f;
-    public float fieldOfView = 120f;
-    public float viewDistance = 10f;
-    public float attackDistance = 2f;
-
-    public int damage = 99;
-
-    public Transform enemyFace;
-    public Transform _player;
-    public PlayerStats playerStats;
-    public bool _playerInSight;
-    public bool attacking;
-
-    // patrol variables
-    public Transform[] patrolPoints;
-    public int _currentPatrolPoint;
-
-    public Vector3 playerLastPosition;
-
-    public NavMeshAgent agent;
-    public EnemyAudioManager audioManager;
-
-    private void Start()
+    public class EnemyStateManager : MonoBehaviour
     {
-        currentState = patrolingState;
+        private EnemyBaseState currentState;
+        public EnemyBaseState previousState;
 
-        currentState.EnterState(this);
-    }
+        public readonly EnemyIdleState idleState = new EnemyIdleState();
+        public readonly EnemyAttackingState attackingState = new EnemyAttackingState();
+        public readonly EnemyPatrolingState patrolingState = new EnemyPatrolingState();
+        public readonly EnemyChasingState chasingState = new EnemyChasingState();
 
-    private void Update()
-    {
-        _playerInSight = IsPlayerInSight();
-    }
+        public Animator animator;
 
-    private void FixedUpdate()
-    {
-        currentState.UpdateState();
-    }
+        public float patrolSpeed = 5f;
+        public float chaseSpeed = 10f;
+        public float fieldOfView = 120f;
+        public float viewDistance = 10f;
+        public float viewDistanceInDark = 5f;
+        public float attackDistance = 2f;
+        public float hearDistanceCrouch = 2f;
+        public float hearDistanceWalk = 5f;
+        public float hearDistanceRun = 10f;
 
-    public void SwitchState(EnemyBaseState nextState)
-    {
-        previousState = currentState;
-        currentState = nextState;
+        public int damage = 90;
 
-        currentState.EnterState(this);
-    }
+        public Transform enemyFace;
+        public Transform player;
+        public bool playerInSight;
+        public bool attacking;
 
-    bool IsPlayerInSight()
-    {
-        if (Vector3.Distance(transform.position, _player.position) > viewDistance)
+        // patrol variables
+        public Transform[] patrolPoints;
+
+        [FormerlySerializedAs("_currentPatrolPoint")]
+        public int currentPatrolPoint;
+        
+        public Vector3 playerLastPosition;
+        public LayerMask playerMask;
+
+        public NavMeshAgent agent;
+        public EnemyAudioManager audioManager;
+
+        private void Awake()
         {
-            return false;
+            player = FindObjectOfType<PlayerManager>().transform;
         }
 
-        Vector3 direction = _player.position - transform.position;
-        float angle = Vector3.Angle(direction, transform.forward);
-
-        if (angle > fieldOfView / 2f)
+        private void Start()
         {
-            return false;
+            currentState = patrolingState;
+
+            currentState.EnterState(this);
         }
 
-        Debug.DrawRay(transform.position, direction.normalized, Color.green);
-
-        RaycastHit hit;
-        if (Physics.Raycast(transform.position + Vector3.up, direction.normalized, out hit, viewDistance))
+        private void Update()
         {
-            if (hit.collider.tag == "Player")
+            playerInSight = IsPlayerInSight();
+        }
+
+        private void FixedUpdate()
+        {
+            currentState.UpdateState();
+        }
+
+        // ReSharper disable Unity.PerformanceAnalysis
+        public void SwitchState(EnemyBaseState nextState)
+        {
+            previousState = currentState;
+            currentState = nextState;
+
+            currentState.EnterState(this);
+        }
+
+        // ReSharper disable Unity.PerformanceAnalysis
+        private bool IsPlayerInSight()
+        {
+            if (!CheckIfCanReachPlayer(player.position))
             {
-                // Check if the player is in the light
-                if (hit.collider.GetComponent<PlayerController>().IsInLight())
+                return false;
+            }
+            
+            if (Vector3.Distance(transform.position, player.position) > viewDistance)
+            {
+                return false;
+            }
+
+            var direction = player.position - transform.position;
+            var angle = Vector3.Angle(direction, transform.forward);
+
+            if (angle > fieldOfView / 2f)
+            {
+                if (!Physics.Raycast(transform.position + Vector3.up * 0.3f, direction.normalized, out var hit, viewDistance, playerMask)) return false;
+
+                var playerManager = hit.collider.GetComponent<PlayerManager>();
+                var distance = Vector3.Distance(transform.position, playerManager.transform.position);
+
+                switch (playerManager.PlayerController.noiseValue)
                 {
-                    return true;
+                    case 0.3f:
+                        if (distance > hearDistanceCrouch)
+                        {
+                            return false;
+                        }
+                        return true;
+                    case 0.6f:
+                        if (distance > hearDistanceWalk)
+                        {
+                            return false;
+                        }
+                        return true;
+                    case 1f: return true;
+                    default: return false;
+                }
+            }
+            else
+            {
+                if (!Physics.Raycast(transform.position + Vector3.up * 0.3f, direction.normalized, out var hit, viewDistance, playerMask)) return false;
+
+                var distance = Vector3.Distance(transform.position, player.position);
+
+                if (hit.collider.GetComponent<PlayerManager>().PlayerController.isInLight)
+                {
+                    return !(distance > viewDistance);
                 }
                 else
                 {
-                    return false;
+                    return !(distance > viewDistanceInDark);
                 }
             }
         }
 
-        return false;
-    }
-
-    public void CheckPlayerInSightAfterAttack()
-    {
-        if (_playerInSight)
+        public void CheckPlayerInSightAfterAttack()
         {
-            SwitchState(chasingState);
+            if (playerInSight)
+            {
+                SwitchState(chasingState);
+            }
+            else
+            {
+                SwitchState(patrolingState);
+            }
         }
-        else
+
+        public void AttackPlayer()
         {
-            SwitchState(patrolingState);
+            player.GetComponent<PlayerManager>().PlayerStats.GetDamage(damage, enemyFace);
+            transform.LookAt(player);
         }
-    }
 
-    public void AttackPlayer()
-    {
-        _player.GetComponent<PlayerStats>().GetDamage(damage, enemyFace);
-        transform.LookAt(_player);
-    }
-
-    public void FinishAttack()
-    {
-        _player.GetComponent<PlayerStats>().ReleasePlayer();
-
-        SwitchState(idleState);
-    }
-
-    public void FinishStun()
-    {
-        if (_playerInSight)
+        public void FinishAttack()
         {
-            SwitchState(chasingState);
-        }   
-        else
+            player.GetComponent<PlayerManager>().PlayerStats.ReleasePlayer();
+
+            SwitchState(idleState);
+        }
+
+        public void FinishStun()
         {
-            SwitchState(patrolingState);
+            if (playerInSight && CheckIfCanReachPlayer(player.position))
+            {
+                SwitchState(chasingState);
+            }
+            else
+            {
+                SwitchState(patrolingState);
+            }
+        }
+
+        public bool CheckIfCanReachPlayer(Vector3 target)
+        {
+            var navMeshPath = new NavMeshPath();
+            
+            if (agent.CalculatePath(target, navMeshPath) && navMeshPath.status == NavMeshPathStatus.PathComplete)
+            {
+                return true;
+            }
+            else
+            {
+                return false;
+            }
         }
     }
 }

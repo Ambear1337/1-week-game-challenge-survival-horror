@@ -1,12 +1,11 @@
-using System.Collections;
-using System.Collections.Generic;
 using UnityEngine;
 using UnityEngine.InputSystem;
 
 public class PlayerGrab : MonoBehaviour
 {
-    [SerializeField]
-    private LayerMask grabbableLayer;
+    private PlayerManager playerManager;
+
+    [SerializeField] private LayerMask grabbableLayer;
 
     private Transform defaultEnergyParent;
 
@@ -18,22 +17,22 @@ public class PlayerGrab : MonoBehaviour
     private Rigidbody grabObjectRb;
     private Collider grabObjectCollider;
 
-    float grabStrength;
+    private float grabStrength;
 
-    [SerializeField]
-    private float grabStrengthMultiplier = 2.0f;
+    [SerializeField] private float grabStrengthMultiplier = 2.0f;
 
-    [SerializeField]
-    float grapDistance = 3.0f;
+    [SerializeField] float grapDistance = 3.0f;
 
-    [SerializeField]
-    float grabRange = 3.0f;
+    [SerializeField] float grabRange = 3.0f;
 
-    [SerializeField]
-    private Transform energy;
+    [SerializeField] private Transform energy;
 
-    [SerializeField]
-    private Camera followCam;
+    [SerializeField] private Camera followCam;
+
+    private void Awake()
+    {
+        playerManager = GetComponent<PlayerManager>();
+    }
 
     private void Update()
     {
@@ -41,7 +40,7 @@ public class PlayerGrab : MonoBehaviour
         {
             grabStrength = grabStrengthMultiplier + grabObjectRb.mass;
 
-            Vector3 desiredPosition = (energy.transform.position - grabObject.transform.position) * grabStrength;
+            var desiredPosition = (energy.transform.position - grabObject.transform.position) * grabStrength;
             grabObjectRb.AddForce(desiredPosition);
 
             if (Vector3.Distance(energy.transform.position, grabObject.transform.position) >= grapDistance)
@@ -66,7 +65,7 @@ public class PlayerGrab : MonoBehaviour
 
     void GrabObject()
     {
-        Ray ray = new Ray(followCam.transform.position, followCam.transform.forward);
+        var ray = new Ray(followCam.transform.position, followCam.transform.forward);
         RaycastHit hit;
         if (Physics.Raycast(ray, out hit, grabRange, grabbableLayer))
         {
@@ -87,6 +86,7 @@ public class PlayerGrab : MonoBehaviour
                 energy.transform.position = hit.point;
                 grabObjectRb.drag = 10.0f;
             }
+
             Debug.DrawLine(ray.origin, hit.point, Color.green, 3f);
         }
     }
