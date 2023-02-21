@@ -1,4 +1,5 @@
 using System;
+using UnityEditor;
 using UnityEngine;
 using UnityEngine.AI;
 using UnityEngine.Serialization;
@@ -25,7 +26,6 @@ namespace Enemy
         public float attackDistance = 2f;
         public float hearDistanceCrouch = 2f;
         public float hearDistanceWalk = 5f;
-        public float hearDistanceRun = 10f;
 
         public int damage = 90;
 
@@ -184,6 +184,11 @@ namespace Enemy
             {
                 return false;
             }
+        }
+
+        private void OnDrawGizmos()
+        {
+            Gizmos.DrawWireSphere(transform.position, hearDistanceWalk);
         }
     }
 }

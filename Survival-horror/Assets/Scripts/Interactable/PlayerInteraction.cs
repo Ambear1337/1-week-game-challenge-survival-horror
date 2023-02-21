@@ -1,3 +1,4 @@
+using System.Collections;
 using UnityEngine;
 using UnityEngine.InputSystem;
 using UnityEngine.Serialization;
@@ -10,7 +11,7 @@ namespace Interactable
 
         public float interactionDistance = 3f;
 
-        public TMPro.TextMeshProUGUI InteractionText;
+        [FormerlySerializedAs("InteractionText")] public TMPro.TextMeshProUGUI interactionText;
 
         [FormerlySerializedAs("ICantDoThisText")]
         public TMPro.TextMeshProUGUI errorText;
@@ -19,38 +20,36 @@ namespace Interactable
 
         Interactable interactable;
 
+        private Animator errorTextAnimator;
+
         private void Awake()
         {
             playerManager = GetComponent<PlayerManager>();
+            errorTextAnimator = GetComponent<Animator>();
         }
 
         // Update is called once per frame
         void Update()
         {
             var ray = new Ray(cam.transform.position, cam.transform.forward);
-            RaycastHit hit;
 
             var successfulHit = false;
 
-            if (Physics.Raycast(ray, out hit, interactionDistance))
+            if (Physics.Raycast(ray, out var hit, interactionDistance))
             {
-                if (!hit.collider.isTrigger)
+                if (hit.collider.GetComponent<Interactable>())
                 {
                     interactable = hit.collider.GetComponent<Interactable>();
 
-                    if (!interactable)
-                    {
-                        Debug.DrawRay(ray.origin, ray.direction, Color.green);
-                        InteractionText.text = interactable.GetDescription();
-                        successfulHit = true;
-                    }
+                    interactionText.text = interactable.GetDescription();
+                    successfulHit = true;
                 }
             }
 
             if (!successfulHit)
             {
-                InteractionText.text = "";
-                InteractionText.color = Color.white;
+                interactionText.text = "";
+                interactionText.color = Color.white;
             }
         }
 
@@ -61,9 +60,13 @@ namespace Interactable
                 switch (interactable.itemType)
                 {
                     case Interactable.ItemType.Null:
+                        
                         interactable.Interact(playerManager);
+                        
                         break;
+                    
                     case Interactable.ItemType.Lockpick:
+                        
                         if (playerManager.PlayerStats.equippedItem != null &&
                             playerManager.PlayerStats.equippedItem.gameObject.name.StartsWith("Lockpick"))
                         {
@@ -75,6 +78,45 @@ namespace Interactable
                             return;
                         }
 
+                        break;
+                    
+                    case Interactable.ItemType.BlueCog:
+                        
+                        if (playerManager.PlayerStats.equippedItem != null &&
+                           playerManager.PlayerStats.equippedItem.gameObject.name.StartsWith("BlueCog"))
+                        {
+                            interactable.Interact(playerManager);
+                        }
+                    
+                        break;
+                    
+                    case Interactable.ItemType.YellowCog:
+                        
+                        if (playerManager.PlayerStats.equippedItem != null &&
+                            playerManager.PlayerStats.equippedItem.gameObject.name.StartsWith("YellowCog"))
+                        {
+                            interactable.Interact(playerManager);
+                        }
+                        
+                        break;
+                    
+                    case Interactable.ItemType.RedCog:
+                        
+                        if (playerManager.PlayerStats.equippedItem != null &&
+                            playerManager.PlayerStats.equippedItem.gameObject.name.StartsWith("RedCog"))
+                        {
+                            interactable.Interact(playerManager);
+                        }
+                        
+                        break;
+                    case Interactable.ItemType.Lantern:
+                        
+                        if (playerManager.PlayerStats.equippedItem != null &&
+                            playerManager.PlayerStats.equippedItem.gameObject.name.StartsWith("Lantern"))
+                        {
+                            interactable.Interact(playerManager);
+                        }
+                        
                         break;
                     default:
                         throw new System.Exception("Unsupported type of interactable.");
@@ -90,10 +132,13 @@ namespace Interactable
         {
             errorText.text = errorString;
             
-            var animator = errorText.transform.GetComponent<Animator>();
+            StartCoroutine(ErrorTextMessage());
+        }
 
-            animator.enabled = true;
-            animator.Play("Base Layer.ErrorTextAnim");
+        private IEnumerator ErrorTextMessage()
+        {
+            yield return new WaitForSeconds(2f);
+            errorText.text = "";
         }
     }
 }

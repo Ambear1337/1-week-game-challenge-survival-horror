@@ -13,7 +13,11 @@ namespace Interactable
         public enum ItemType
         {
             Null,
-            Lockpick
+            Lockpick,
+            YellowCog,
+            BlueCog,
+            RedCog,
+            Lantern
         }
 
         public ItemType itemType;

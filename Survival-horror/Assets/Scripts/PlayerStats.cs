@@ -13,6 +13,14 @@ public class PlayerStats : MonoBehaviour
     [SerializeField] private int health = 100;
     [SerializeField] private int maxHealth = 100;
 
+    [SerializeField] private int healthRegenerationRate = 5;
+
+    [SerializeField] private int stamina = 100;
+    [SerializeField] private int maxStamina = 100;
+
+    [SerializeField] private int staminaConsumingRate = 10;
+    [SerializeField] private int staminaRegenerationRate = 5;
+
     [SerializeField] private Image healthBar;
 
     [SerializeField] private float screamerFOV = 30f;
@@ -21,11 +29,15 @@ public class PlayerStats : MonoBehaviour
     [SerializeField] Transform equippedItemTransform;
     [SerializeField] GameObject equippedItemGO;
 
+    private Camera cam;
+    
     public EquippedItem equippedItem;
 
     private void Awake()
     {
         playerManager = GetComponent<PlayerManager>();
+
+        cam = playerManager.PlayerController.cam;
     }
 
     private void Start()
@@ -47,7 +59,7 @@ public class PlayerStats : MonoBehaviour
 
         playerManager.PlayerInput.enabled = false;
         playerManager.PlayerController.enabled = false;
-        playerManager.PlayerController.cam.fieldOfView = screamerFOV;
+        cam.fieldOfView = screamerFOV;
 
         StartCoroutine(ScreamerCoroutine(enemy));
     }
@@ -56,21 +68,21 @@ public class PlayerStats : MonoBehaviour
     {
         playerManager.PlayerInput.enabled = true;
         playerManager.PlayerController.enabled = true;
-        playerManager.PlayerController.cam.fieldOfView = normalFOV;
+        cam.fieldOfView = normalFOV;
 
         StartCoroutine(RegenerateHealth());
     }
 
     private static void Death()
     {
-        SceneManager.LoadScene(SceneManager.GetActiveScene().name);
+        //SceneManager.LoadScene(SceneManager.GetActiveScene().name);
     }
 
-    IEnumerator ScreamerCoroutine(Transform enemyFace)
+    private IEnumerator ScreamerCoroutine(Transform enemyFace)
     {
         while (playerManager.PlayerInput.enabled == false)
         {
-            playerManager.PlayerController.cam.transform.LookAt(enemyFace);
+            cam.transform.LookAt(enemyFace);
 
             yield return null;
         }
@@ -82,7 +94,7 @@ public class PlayerStats : MonoBehaviour
         {
             yield return new WaitForSeconds(1f);
 
-            health += 5;
+            health += healthRegenerationRate;
 
             if (health > maxHealth)
             {
@@ -91,6 +103,51 @@ public class PlayerStats : MonoBehaviour
 
             UpdateHealthBar();
         }
+    }
+    
+    private IEnumerator RegenerateStamina()
+    {
+        while (stamina < maxStamina && !playerManager.PlayerController.isSprinting)
+        {
+            yield return new WaitForSeconds(1f);
+
+            stamina += staminaRegenerationRate;
+
+            if (stamina > maxStamina)
+            {
+                stamina = maxStamina;
+            }
+
+            //Update stamina bar
+        }
+    }
+
+    public void StartSprint()
+    {
+        StopCoroutine((RegenerateStamina()));
+        StartCoroutine(ConsumeStamina());
+    }
+
+    public void StopSprint()
+    {
+        StopCoroutine(ConsumeStamina());
+        StartCoroutine(RegenerateStamina());
+    }
+    private IEnumerator ConsumeStamina()
+    {
+        while (stamina > 0 && playerManager.PlayerController.isSprinting)
+        {
+            yield return new WaitForSeconds(1f);
+
+            stamina -= staminaConsumingRate;
+
+            if (stamina < 0)
+            {
+                stamina = 0;
+            }
+        }
+        
+        //Update stamina bar
     }
 
     private void UpdateHealthBar()

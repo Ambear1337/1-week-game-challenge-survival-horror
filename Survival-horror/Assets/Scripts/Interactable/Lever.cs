@@ -4,14 +4,14 @@ namespace Interactable
 {
     public class Lever : Interactable
     {
-        [SerializeField] private bool isWorking = false;
         [SerializeField] private string description = "Pull the lever";
         [SerializeField] private ConnectedObject connectedObject;
         [SerializeField] private Animator animator;
+        [SerializeField] private Transform leverFixer;
         
         public override void Interact(PlayerManager player)
         {
-            if (isWorking)
+            if (leverFixer.GetComponent<LeverFixer>().allCogsSettedUp)
             {
                 animator.enabled = true;
             }

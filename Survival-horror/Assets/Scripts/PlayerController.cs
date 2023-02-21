@@ -2,6 +2,7 @@ using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
 using UnityEngine.InputSystem;
+using UnityEngine.Serialization;
 
 [RequireComponent(typeof(CharacterController))]
 public class PlayerController : MonoBehaviour
@@ -12,6 +13,9 @@ public class PlayerController : MonoBehaviour
 
     private bool isCrouching = false;
     private bool canUncrouch = true;
+
+    public bool isSprinting = false;
+    private bool canSprint = true;
 
     private float rotY;
     private float rotX;
@@ -32,7 +36,7 @@ public class PlayerController : MonoBehaviour
     [SerializeField] private Vector3 crouchScale = new Vector3(1f, 0.5f, 1f);
     [SerializeField] private Vector3 normalScale = Vector3.one;
 
-    [SerializeField] InputHandler input;
+    [SerializeField] private InputHandler input;
 
     private void Awake()
     {
@@ -62,6 +66,22 @@ public class PlayerController : MonoBehaviour
         if (!controller.isGrounded)
         {
             velocity += (Physics.gravity * Time.deltaTime);
+        }
+
+        // Changing noise value related to player state value
+        if (input.inputDirection != Vector2.zero)
+        {
+            noiseValue = isCrouching switch
+            {
+                false when isSprinting == false => 0.6f,
+                true when isSprinting == false => 0.3f,
+                false when isSprinting == true => 1f,
+                _ => 0.6f
+            };
+        }
+        else
+        {
+            noiseValue = 0f;
         }
 
         controller.Move(velocity);
@@ -106,6 +126,11 @@ public class PlayerController : MonoBehaviour
         switch (ctx.performed)
         {
             case true when isCrouching == false:
+                if (isSprinting == true)
+                {
+                    isSprinting = false;
+                }
+
                 isCrouching = true;
                 moveSpeed = crouchSpeed;
                 noiseValue = 0.3f;
@@ -119,6 +144,26 @@ public class PlayerController : MonoBehaviour
 
                 transform.localScale = normalScale;
                 break;
+        }
+    }
+
+    public void Sprint(InputAction.CallbackContext ctx)
+    {
+        if (ctx.performed && canSprint == true && isCrouching == false)
+        {
+            isSprinting = true;
+            moveSpeed = runSpeed;
+            noiseValue = 1f;
+
+            playerManager.PlayerStats.StartSprint();
+        }
+        else if (ctx.canceled && isCrouching == false)
+        {
+            isSprinting = false;
+            moveSpeed = walkSpeed;
+            noiseValue = 1f;
+
+            playerManager.PlayerStats.StopSprint();
         }
     }
 

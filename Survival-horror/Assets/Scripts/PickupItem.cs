@@ -2,19 +2,22 @@ using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
 
-public class PickupItem : Interactable.Interactable
+namespace Interactable
 {
-    [SerializeField] private GameObject equippedItem;
-    [SerializeField] private string description = " ";
-
-    public override void Interact(PlayerManager player)
+    public class PickupItem : Interactable
     {
-        player.PlayerStats.Equip(equippedItem);
-        Destroy(gameObject);
-    }
+        [SerializeField] private GameObject equippedItem;
+        [SerializeField] private string description = " ";
 
-    public override string GetDescription()
-    {
-        return description;
+        public override void Interact(PlayerManager player)
+        {
+            player.PlayerStats.Equip(equippedItem);
+            Destroy(gameObject);
+        }
+
+        public override string GetDescription()
+        {
+            return description;
+        }
     }
 }

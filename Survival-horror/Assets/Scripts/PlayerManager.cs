@@ -10,12 +10,14 @@ public class PlayerManager : MonoBehaviour
     [SerializeField] private PlayerStats playerStats;
     [SerializeField] private PlayerController playerController;
     [SerializeField] private PlayerGrab playerGrab;
+    [SerializeField] private InputHandler inputHandler;
     [SerializeField] private PlayerInput playerInput;
 
     public PlayerInteraction PlayerInteraction => playerInteraction;
     public PlayerStats PlayerStats => playerStats;
     public PlayerController PlayerController => playerController;
     public PlayerGrab PlayerGrab => playerGrab;
+    public InputHandler InputHandler => inputHandler;
     public PlayerInput PlayerInput => playerInput;
 
     private void Awake()
@@ -24,6 +26,7 @@ public class PlayerManager : MonoBehaviour
         playerStats = GetComponent<PlayerStats>();
         playerController = GetComponent<PlayerController>();
         playerGrab = GetComponent<PlayerGrab>();
+        inputHandler = GetComponent<InputHandler>();
         playerInput = GetComponent<PlayerInput>();
     }
 }
