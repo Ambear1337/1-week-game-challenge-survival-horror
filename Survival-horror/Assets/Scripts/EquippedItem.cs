@@ -7,4 +7,6 @@ public abstract class EquippedItem : MonoBehaviour
     public abstract void Use();
 
     public abstract void Drop();
+
+    public abstract void DestroyItem();
 }

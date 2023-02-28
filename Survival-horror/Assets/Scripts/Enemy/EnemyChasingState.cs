@@ -1,5 +1,7 @@
+using System.Collections.Generic;
 using UnityEngine;
 using UnityEngine.AI;
+using System.Collections;
 
 namespace Enemy
 {
@@ -11,6 +13,8 @@ namespace Enemy
         {
             manager = stateManager;
 
+            stateManager.ChangePlayerChaseState(true);
+            
             manager.agent.isStopped = false;
 
             manager.animator.SetBool("IsChasing", true);
@@ -35,7 +39,7 @@ namespace Enemy
             }
             else
             {
-                if (Vector3.Distance(manager.transform.position, manager.playerLastPosition) <= 2.5f)
+                if (Vector3.Distance(manager.transform.position, manager.playerLastPosition) <= 1.5f)
                 {
                     manager.agent.isStopped = true;
 

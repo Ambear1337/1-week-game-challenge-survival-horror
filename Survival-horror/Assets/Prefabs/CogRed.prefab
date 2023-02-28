@@ -14,7 +14,7 @@ GameObject:
   - component: {fileID: 7986428750810333847}
   - component: {fileID: 5754132948367076404}
   - component: {fileID: 3417763624105077147}
-  m_Layer: 0
+  m_Layer: 12
   m_Name: CogRed
   m_TagString: Untagged
   m_Icon: {fileID: 0}
@@ -101,7 +101,8 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   itemType: 0
   interactionType: 0
-  equippedItem: {fileID: 0}
+  equippedItem: {fileID: 4826714131340406199, guid: 9738d9646bb686d49985ab239b0f7aed,
+    type: 3}
   description: Pickup red cog
 --- !u!65 &5754132948367076404
 BoxCollider:

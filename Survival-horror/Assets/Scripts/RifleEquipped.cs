@@ -46,6 +46,11 @@ public class RifleEquipped : EquippedItem
         Destroy(gameObject);
     }
 
+    public override void DestroyItem()
+    {
+        Destroy(gameObject);
+    }
+
     IEnumerator ReloadCoroutine()
     {
         yield return new WaitForSeconds(reloadTime);

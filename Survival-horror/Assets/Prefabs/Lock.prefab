@@ -13,7 +13,7 @@ GameObject:
   - component: {fileID: 3390777811551791209}
   - component: {fileID: 3977849496515138780}
   - component: {fileID: 799621754755210381}
-  m_Layer: 0
+  m_Layer: 12
   m_Name: Lock
   m_TagString: Untagged
   m_Icon: {fileID: 0}
@@ -113,4 +113,7 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 51d51ccad9c93864ca6fd2b6a52b775e, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
+  itemType: 0
   interactionType: 0
+  description: ' '
+  connectedObject: {fileID: 0}

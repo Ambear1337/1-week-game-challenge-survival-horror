@@ -14,7 +14,7 @@ GameObject:
   - component: {fileID: -8256426196636811}
   - component: {fileID: 5582417744255805755}
   - component: {fileID: 140438876215720055}
-  m_Layer: 0
+  m_Layer: 12
   m_Name: CogYellow
   m_TagString: Untagged
   m_Icon: {fileID: 0}
@@ -101,7 +101,8 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   itemType: 0
   interactionType: 0
-  equippedItem: {fileID: 0}
+  equippedItem: {fileID: 8223892607300603501, guid: 728fa2a9ef9580a43b73988249aa5b0e,
+    type: 3}
   description: Pickup yellow cog
 --- !u!65 &5582417744255805755
 BoxCollider:

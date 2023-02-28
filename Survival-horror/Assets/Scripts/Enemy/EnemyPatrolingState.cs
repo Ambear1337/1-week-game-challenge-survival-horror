@@ -10,6 +10,8 @@ namespace Enemy
         {
             manager = _stateManager;
 
+            manager.ChangePlayerChaseState(false);
+            
             manager.agent.isStopped = false;
 
             manager.animator.SetBool("IsPatroling", true);

@@ -383,7 +383,7 @@ GameObject:
   - component: {fileID: 5382230486075514134}
   - component: {fileID: 6779754153434600143}
   - component: {fileID: 5040365824655860450}
-  m_Layer: 0
+  m_Layer: 12
   m_Name: RedCogInteractable
   m_TagString: Untagged
   m_Icon: {fileID: 0}
@@ -822,7 +822,7 @@ GameObject:
   - component: {fileID: 111605850085423377}
   - component: {fileID: 361188042456775402}
   - component: {fileID: 2228082025432903908}
-  m_Layer: 0
+  m_Layer: 12
   m_Name: YellowCogInteractable
   m_TagString: Untagged
   m_Icon: {fileID: 0}
@@ -884,7 +884,7 @@ GameObject:
   - component: {fileID: 6703073808132445884}
   - component: {fileID: 940774271870276339}
   - component: {fileID: 5380872531591015947}
-  m_Layer: 0
+  m_Layer: 12
   m_Name: BlueCogInteractable
   m_TagString: Untagged
   m_Icon: {fileID: 0}

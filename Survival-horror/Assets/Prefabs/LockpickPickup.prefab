@@ -14,7 +14,7 @@ GameObject:
   - component: {fileID: -6892296851294222831}
   - component: {fileID: 1974013185205517726}
   - component: {fileID: 3618436276504975434}
-  m_Layer: 0
+  m_Layer: 12
   m_Name: LockpickPickup
   m_TagString: Untagged
   m_Icon: {fileID: 0}

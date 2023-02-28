@@ -12,10 +12,11 @@ GameObject:
   - component: {fileID: 986859615155188801}
   - component: {fileID: 3050890636255297675}
   - component: {fileID: 8446956740570965677}
-  m_Layer: 0
+  - component: {fileID: 9133799399773979511}
+  m_Layer: 12
   m_Name: Torch
   m_TagString: Untagged
-  m_Icon: {fileID: 0}
+  m_Icon: {fileID: 5721338939258241955, guid: 0000000000000000d000000000000000, type: 0}
   m_NavMeshLayer: 0
   m_StaticEditorFlags: 0
   m_IsActive: 1
@@ -101,8 +102,22 @@ MonoBehaviour:
   interactionType: 0
   isIgnited: 1
   light: {fileID: 6781008500460438567}
-  ignitedDescription: Put out torch
-  puttedOutDescription: Ignite torch
+  secretWall: {fileID: 0}
+  ignitedDescription: Ignite torch
+  puttedOutDescription: Put out torch
+--- !u!135 &9133799399773979511
+SphereCollider:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 3555042900410605918}
+  m_Material: {fileID: 0}
+  m_IsTrigger: 1
+  m_Enabled: 1
+  serializedVersion: 2
+  m_Radius: 0.54
+  m_Center: {x: 0, y: -0.013587147, z: 0.17691001}
 --- !u!1 &6521754560479262351
 GameObject:
   m_ObjectHideFlags: 0

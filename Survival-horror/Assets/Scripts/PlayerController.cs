@@ -33,8 +33,14 @@ public class PlayerController : MonoBehaviour
     [SerializeField] private float runSpeed = 5f;
     [SerializeField] private float moveSpeed = 3f;
 
-    [SerializeField] private Vector3 crouchScale = new Vector3(1f, 0.5f, 1f);
-    [SerializeField] private Vector3 normalScale = Vector3.one;
+    [SerializeField] private Vector3 crouchControllerCenter = new Vector3(0f, 0.5f, 0f);
+    [SerializeField] private Vector3 normalControllerCenter = Vector3.up;
+
+    [SerializeField] private float crouchControllerHeight = 1f;
+    [SerializeField] private float normalControllerHeight = 2f;
+
+    [SerializeField] private Vector3 crouchCamPos = Vector3.up * 0.75f;
+    [SerializeField] private Vector3 normalCamPos = Vector3.up * 1.5f;
 
     [SerializeField] private InputHandler input;
 
@@ -135,14 +141,20 @@ public class PlayerController : MonoBehaviour
                 moveSpeed = crouchSpeed;
                 noiseValue = 0.3f;
 
-                transform.localScale = crouchScale;
+                controller.height = crouchControllerHeight;
+                controller.center = crouchControllerCenter;
+                cam.transform.localPosition = crouchCamPos;
+                
                 break;
             case true when isCrouching == true && canUncrouch:
                 isCrouching = false;
                 moveSpeed = walkSpeed;
                 noiseValue = 0.6f;
 
-                transform.localScale = normalScale;
+                controller.height = normalControllerHeight;
+                controller.center = normalControllerCenter;
+                cam.transform.localPosition = normalCamPos;
+                
                 break;
         }
     }

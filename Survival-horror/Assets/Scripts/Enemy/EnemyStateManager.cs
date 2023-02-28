@@ -97,41 +97,54 @@ namespace Enemy
             {
                 if (!Physics.Raycast(transform.position + Vector3.up * 0.3f, direction.normalized, out var hit, viewDistance, playerMask)) return false;
 
-                var playerManager = hit.collider.GetComponent<PlayerManager>();
-                var distance = Vector3.Distance(transform.position, playerManager.transform.position);
-
-                switch (playerManager.PlayerController.noiseValue)
-                {
-                    case 0.3f:
-                        if (distance > hearDistanceCrouch)
-                        {
-                            return false;
-                        }
-                        return true;
-                    case 0.6f:
-                        if (distance > hearDistanceWalk)
-                        {
-                            return false;
-                        }
-                        return true;
-                    case 1f: return true;
-                    default: return false;
-                }
+                return CheckPlayerOnHearing();
             }
             else
             {
-                if (!Physics.Raycast(transform.position + Vector3.up * 0.3f, direction.normalized, out var hit, viewDistance, playerMask)) return false;
+                if (!Physics.Raycast(transform.position + Vector3.up * 0.3f, direction.normalized, out var hit, viewDistance))
+                {
+                    return CheckPlayerOnHearing();
+                }
 
                 var distance = Vector3.Distance(transform.position, player.position);
 
-                if (hit.collider.GetComponent<PlayerManager>().PlayerController.isInLight)
+                if (hit.collider.CompareTag("Player"))
                 {
-                    return !(distance > viewDistance);
+                    if (hit.collider.GetComponent<PlayerManager>().PlayerController.isInLight)
+                    {
+                        return !(distance > viewDistance);
+                    }
+                    else
+                    {
+                        return !(distance > viewDistanceInDark);
+                    }
                 }
                 else
                 {
-                    return !(distance > viewDistanceInDark);
+                    return false;
                 }
+            }
+        }
+
+        private bool CheckPlayerOnHearing()
+        {
+            var direction = player.position - transform.position;
+            
+            if (!Physics.Raycast(transform.position + Vector3.up * 0.3f, direction.normalized, out var hit, viewDistance, playerMask)) return false;
+
+            var playerManager = hit.collider.GetComponent<PlayerManager>();
+            var distance = Vector3.Distance(transform.position, playerManager.transform.position);
+
+            Debug.DrawRay(transform.position + Vector3.up * 0.3f, direction.normalized, Color.red);
+
+            switch (playerManager.PlayerController.noiseValue)
+            {
+                case 0.3f:
+                    return !(distance > hearDistanceCrouch);
+                case 0.6f:
+                    return !(distance > hearDistanceWalk);
+                case 1f: return true;
+                default: return false;
             }
         }
 
@@ -189,6 +202,11 @@ namespace Enemy
         private void OnDrawGizmos()
         {
             Gizmos.DrawWireSphere(transform.position, hearDistanceWalk);
+        }
+
+        public void ChangePlayerChaseState(bool isChasing)
+        {
+            player.GetComponent<PlayerManager>().PlayerStats.IsChased = isChasing;
         }
     }
 }

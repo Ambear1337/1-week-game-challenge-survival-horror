@@ -1,5 +1,6 @@
 using UnityEngine;
 using UnityEngine.InputSystem;
+using UnityEngine.UI;
 
 public class PlayerGrab : MonoBehaviour
 {
@@ -18,6 +19,10 @@ public class PlayerGrab : MonoBehaviour
     private Collider grabObjectCollider;
 
     private float grabStrength;
+
+    public Image crosshair;
+    public Sprite normalCrosshair;
+    public Sprite grabCrosshair;
 
     [SerializeField] private float grabStrengthMultiplier = 2.0f;
 
@@ -75,6 +80,8 @@ public class PlayerGrab : MonoBehaviour
             }
             else
             {
+                crosshair.sprite = grabCrosshair;
+                
                 defaultEnergyLocalPosition = energy.localPosition;
                 defaultEnergyParent = energy.transform.parent;
                 energy.transform.parent = followCam.transform;
@@ -93,6 +100,8 @@ public class PlayerGrab : MonoBehaviour
 
     void DropObject()
     {
+        crosshair.sprite = normalCrosshair;
+        
         grabObject.transform.parent = null;
         grabObjectRb.drag = default;
 

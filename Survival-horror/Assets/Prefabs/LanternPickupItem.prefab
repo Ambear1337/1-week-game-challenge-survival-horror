@@ -146,7 +146,7 @@ GameObject:
   - component: {fileID: 3752975743640090069}
   - component: {fileID: 6719582292150499816}
   - component: {fileID: 3449628631308779004}
-  m_Layer: 0
+  m_Layer: 12
   m_Name: LanternPickupItem
   m_TagString: Untagged
   m_Icon: {fileID: 0}
@@ -160,8 +160,8 @@ Transform:
   m_PrefabInstance: {fileID: 0}
   m_PrefabAsset: {fileID: 0}
   m_GameObject: {fileID: 5480802144096475387}
-  m_LocalRotation: {x: 0, y: -0, z: -0, w: 1}
-  m_LocalPosition: {x: 46.290485, y: 0.71, z: -21.783676}
+  m_LocalRotation: {x: 0, y: 0, z: 0, w: 1}
+  m_LocalPosition: {x: 0, y: 0, z: 0}
   m_LocalScale: {x: 1, y: 1, z: 1}
   m_ConstrainProportionsScale: 0
   m_Children:
@@ -177,7 +177,7 @@ MeshFilter:
   m_PrefabInstance: {fileID: 0}
   m_PrefabAsset: {fileID: 0}
   m_GameObject: {fileID: 5480802144096475387}
-  m_Mesh: {fileID: 2534964839176971238, guid: 6d5cfded49471724795879a7a9ac1703, type: 3}
+  m_Mesh: {fileID: -5420149580168298667, guid: 6d5cfded49471724795879a7a9ac1703, type: 3}
 --- !u!23 &6273308615440759086
 MeshRenderer:
   m_ObjectHideFlags: 0
@@ -266,7 +266,7 @@ BoxCollider:
   m_Enabled: 1
   serializedVersion: 2
   m_Size: {x: 0.3175121, y: 0.55632836, z: 0.22834218}
-  m_Center: {x: 0, y: -0.27622083, z: 0}
+  m_Center: {x: 0, y: 0.087254226, z: 0}
 --- !u!1001 &6897509150198754032
 PrefabInstance:
   m_ObjectHideFlags: 0
@@ -292,7 +292,7 @@ PrefabInstance:
     - target: {fileID: 2275721571885089005, guid: 153f1d991e6e2c443b39d8db98053304,
         type: 3}
       propertyPath: m_LocalPosition.y
-      value: -0.236
+      value: 0.011
       objectReference: {fileID: 0}
     - target: {fileID: 2275721571885089005, guid: 153f1d991e6e2c443b39d8db98053304,
         type: 3}

@@ -16,4 +16,9 @@ public class InteractionEquippedItem : EquippedItem
         Instantiate(pickupItem, transform.position, Quaternion.identity);
         Destroy(gameObject);
     }
+
+    public override void DestroyItem()
+    {
+        Destroy(gameObject);
+    }
 }

@@ -1645,7 +1645,8 @@ AudioSource:
   m_GameObject: {fileID: 5388427355548296010}
   m_Enabled: 1
   serializedVersion: 4
-  OutputAudioMixerGroup: {fileID: 0}
+  OutputAudioMixerGroup: {fileID: 989663234824887950, guid: 5a7441bb75fe7474481cb480fcda2b72,
+    type: 2}
   m_audioClip: {fileID: 8300000, guid: 846dccb3a10ed24478c3d21d8aa7c311, type: 3}
   m_PlayOnAwake: 0
   m_Volume: 1
@@ -2109,7 +2110,8 @@ AudioSource:
   m_GameObject: {fileID: 6718615268626506801}
   m_Enabled: 1
   serializedVersion: 4
-  OutputAudioMixerGroup: {fileID: 0}
+  OutputAudioMixerGroup: {fileID: 989663234824887950, guid: 5a7441bb75fe7474481cb480fcda2b72,
+    type: 2}
   m_audioClip: {fileID: 8300000, guid: b58b4a3d885f98b4aa49c9f8fe758dcc, type: 3}
   m_PlayOnAwake: 0
   m_Volume: 1
@@ -3117,7 +3119,8 @@ AudioSource:
   m_GameObject: {fileID: 8464785580816300482}
   m_Enabled: 1
   serializedVersion: 4
-  OutputAudioMixerGroup: {fileID: 0}
+  OutputAudioMixerGroup: {fileID: 989663234824887950, guid: 5a7441bb75fe7474481cb480fcda2b72,
+    type: 2}
   m_audioClip: {fileID: 8300000, guid: 2e429d5c1b5ffbe4e839bdde9744f381, type: 3}
   m_PlayOnAwake: 0
   m_Volume: 1
@@ -3223,8 +3226,8 @@ MonoBehaviour:
   viewDistance: 20
   viewDistanceInDark: 15
   attackDistance: 2
-  hearDistanceCrouch: 4
-  hearDistanceWalk: 10
+  hearDistanceCrouch: 2
+  hearDistanceWalk: 5
   damage: 90
   enemyFace: {fileID: 4985533026466148201}
   player: {fileID: 0}

@@ -11,6 +11,8 @@ namespace Interactable
 
         public override void Interact(PlayerManager player)
         {
+            if (player.PlayerStats.equippedItem != null) return;
+            
             player.PlayerStats.Equip(equippedItem);
             Destroy(gameObject);
         }

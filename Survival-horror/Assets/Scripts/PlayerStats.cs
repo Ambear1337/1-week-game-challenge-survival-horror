@@ -1,6 +1,7 @@
 using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
+using UnityEngine.Events;
 using UnityEngine.InputSystem;
 using UnityEngine.UI;
 using UnityEngine.SceneManagement;
@@ -30,7 +31,21 @@ public class PlayerStats : MonoBehaviour
     [SerializeField] GameObject equippedItemGO;
 
     private Camera cam;
+
+    public UnityEvent OnChaseStateChanged;
+
+    private bool isChased = false;
     
+    public bool IsChased
+    {
+        get { return isChased; }
+        set
+        {
+            isChased = value;
+            OnChaseStateChanged.Invoke();
+        }
+    }
+
     public EquippedItem equippedItem;
 
     private void Awake()
@@ -162,5 +177,10 @@ public class PlayerStats : MonoBehaviour
         equippedItemGO = Instantiate(equipItem, equippedItemTransform.position, equippedItemTransform.rotation,
             playerManager.PlayerController.cam.transform);
         equippedItem = equippedItemGO.GetComponent<EquippedItem>();
+    }
+
+    public void DestroyEquippedItem()
+    {
+        
     }
 }

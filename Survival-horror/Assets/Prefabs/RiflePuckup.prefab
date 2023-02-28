@@ -14,7 +14,7 @@ GameObject:
   - component: {fileID: 7873731209278620124}
   - component: {fileID: 3469287838560120216}
   - component: {fileID: 3469287838560120215}
-  m_Layer: 0
+  m_Layer: 12
   m_Name: RiflePuckup
   m_TagString: Untagged
   m_Icon: {fileID: 0}

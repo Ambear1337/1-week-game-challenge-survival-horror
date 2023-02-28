@@ -9,6 +9,8 @@ namespace Interactable
     {
         private PlayerManager playerManager;
 
+        public LayerMask interactableMask;
+
         public float interactionDistance = 3f;
 
         [FormerlySerializedAs("InteractionText")] public TMPro.TextMeshProUGUI interactionText;
@@ -35,7 +37,7 @@ namespace Interactable
 
             var successfulHit = false;
 
-            if (Physics.Raycast(ray, out var hit, interactionDistance))
+            if (Physics.Raycast(ray, out var hit, interactionDistance, interactableMask))
             {
                 if (hit.collider.GetComponent<Interactable>())
                 {
@@ -83,9 +85,10 @@ namespace Interactable
                     case Interactable.ItemType.BlueCog:
                         
                         if (playerManager.PlayerStats.equippedItem != null &&
-                           playerManager.PlayerStats.equippedItem.gameObject.name.StartsWith("BlueCog"))
+                           playerManager.PlayerStats.equippedItem.gameObject.name.StartsWith("CogBlue"))
                         {
                             interactable.Interact(playerManager);
+                            playerManager.PlayerStats.equippedItem.DestroyItem();
                         }
                     
                         break;
@@ -93,9 +96,10 @@ namespace Interactable
                     case Interactable.ItemType.YellowCog:
                         
                         if (playerManager.PlayerStats.equippedItem != null &&
-                            playerManager.PlayerStats.equippedItem.gameObject.name.StartsWith("YellowCog"))
+                            playerManager.PlayerStats.equippedItem.gameObject.name.StartsWith("CogYellow"))
                         {
                             interactable.Interact(playerManager);
+                            playerManager.PlayerStats.equippedItem.DestroyItem();
                         }
                         
                         break;
@@ -103,9 +107,10 @@ namespace Interactable
                     case Interactable.ItemType.RedCog:
                         
                         if (playerManager.PlayerStats.equippedItem != null &&
-                            playerManager.PlayerStats.equippedItem.gameObject.name.StartsWith("RedCog"))
+                            playerManager.PlayerStats.equippedItem.gameObject.name.StartsWith("CogRed"))
                         {
                             interactable.Interact(playerManager);
+                            playerManager.PlayerStats.equippedItem.DestroyItem();
                         }
                         
                         break;

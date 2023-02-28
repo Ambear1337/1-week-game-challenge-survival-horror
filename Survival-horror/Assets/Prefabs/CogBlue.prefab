@@ -14,7 +14,7 @@ GameObject:
   - component: {fileID: 7595699163388184658}
   - component: {fileID: -6056158783582694944}
   - component: {fileID: -3571613908625720774}
-  m_Layer: 0
+  m_Layer: 12
   m_Name: CogBlue
   m_TagString: Untagged
   m_Icon: {fileID: 0}
@@ -101,7 +101,8 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   itemType: 0
   interactionType: 0
-  equippedItem: {fileID: 0}
+  equippedItem: {fileID: 1450369436905195444, guid: 5fb8260cd59328c438b7fdd65cba8f2f,
+    type: 3}
   description: Pickup blue cog
 --- !u!65 &-6056158783582694944
 BoxCollider:
